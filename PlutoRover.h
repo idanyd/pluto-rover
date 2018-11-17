@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 class PlutoRover
 {
@@ -19,9 +20,10 @@ public:
 	
 public:
 	// A rover must know the size of the grid on the planet it's on. 
-	// Please provide the grid's size (x and y coordinates)
-	PlutoRover(unsigned long grid_x, unsigned long grid_y) : 
-		m_position(0, 0, 'N'), m_grid_x(grid_x), m_grid_y(grid_y) {}
+	// Any non-zero value means there's a obstacle on that square,
+	// and the rover can't move there
+	PlutoRover(const std::vector<std::vector<uint8_t>>& grid) : 
+		m_position(0, 0, 'N'), m_grid(grid) {}
 
 	virtual ~PlutoRover() {}
 
@@ -36,16 +38,18 @@ public:
 	// 'L' - Turn 90 degrees left
 	// 'L' - Turn 90 degrees right
 	// Any other character will be ignored by the rover
+	// The rover stops as soon as it hits an obstacle
 	void Go(const std::string& commands);
 
 private:
-	void GoForward();
-	void GoBack();
+	bool GoForward();
+	bool GoBack();
 	void TurnLeft();
 	void TurnRight();
 
 private:
 	Position m_position;
-	unsigned long m_grid_x;
-	unsigned long m_grid_y;
+	std::vector<std::vector<uint8_t>> m_grid;
 };
+
+
