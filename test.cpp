@@ -23,8 +23,9 @@ TEST_F(PlutoRoverTest, TestForwardCommand) {
 	PlutoRover::Position position(0, 1, 'N');
 
 	std::string commands("F");
-	rover.Go(commands);
+	bool success = rover.Go(commands);
 
+	ASSERT_TRUE(success); // The rover did not hit any obstacles on the way
 	ASSERT_EQ(position, rover.GetPos());
 }
 
@@ -90,7 +91,8 @@ TEST_F(PlutoRoverTest, TestObstacles) {
 	PlutoRover::Position position(0, 1, 'E');
 
 	std::string commands("FRFF");
-	rover.Go(commands);
+	bool success = rover.Go(commands);
 
 	ASSERT_EQ(position, rover.GetPos());
+	ASSERT_FALSE(success); // The rover won't follow all of the commands since it hit an obstacle
 }

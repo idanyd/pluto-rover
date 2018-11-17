@@ -52,3 +52,5 @@ private:
 	Position m_position;
 	std::vector<std::vector<uint8_t>> m_grid;
 };
+
+

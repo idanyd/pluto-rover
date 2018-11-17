@@ -4,6 +4,7 @@ bool PlutoRover::Go(const std::string& commands)
 {
 	bool success = true;
 	for (auto command : commands) {
+		bool success = true;
 		switch (command) {
 		case 'F':
 			success = GoForward();
