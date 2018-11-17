@@ -4,18 +4,21 @@
 
 #include <vector>
 
-TEST(PlutoRoverTest, TestStartPosition) {
+class PlutoRoverTest : public testing::Test {
+public:
+	std::vector<std::vector<uint8_t>> grid;
+	PlutoRover rover;
+	PlutoRoverTest() : grid(10, std::vector<uint8_t>(10)), rover(grid) {}
+};
 
-	PlutoRover rover(10, 10);
+TEST_F(PlutoRoverTest, TestStartPosition) {
 
 	PlutoRover::Position position(0, 0, 'N');
 
 	ASSERT_EQ(position, rover.GetPos());
 }
 
-TEST(PlutoRoverTest, TestForwardCommand) {
-
-	PlutoRover rover(10, 10);
+TEST_F(PlutoRoverTest, TestForwardCommand) {
 
 	PlutoRover::Position position(0, 1, 'N');
 
@@ -25,9 +28,7 @@ TEST(PlutoRoverTest, TestForwardCommand) {
 	ASSERT_EQ(position, rover.GetPos());
 }
 
-TEST(PlutoRoverTest, TestSimpleCommand) {
-
-	PlutoRover rover(10, 10);
+TEST_F(PlutoRoverTest, TestSimpleCommand) {
 
 	PlutoRover::Position position(2, 2, 'E');
 
@@ -37,9 +38,7 @@ TEST(PlutoRoverTest, TestSimpleCommand) {
 	ASSERT_EQ(position, rover.GetPos());
 }
 
-TEST(PlutoRoverTest, TestSimpleCommandWithUnhandledcharacters) {
-
-	PlutoRover rover(10, 10);
+TEST_F(PlutoRoverTest, TestSimpleCommandWithUnhandledcharacters) {
 
 	PlutoRover::Position position(2, 2, 'E');
 
@@ -49,9 +48,7 @@ TEST(PlutoRoverTest, TestSimpleCommandWithUnhandledcharacters) {
 	ASSERT_EQ(position, rover.GetPos());
 }
 
-TEST(PlutoRoverTest, TestChainedCommands) {
-
-	PlutoRover rover(10, 10);
+TEST_F(PlutoRoverTest, TestChainedCommands) {
 
 	PlutoRover::Position position(1, 5, 'N');
 
@@ -63,12 +60,9 @@ TEST(PlutoRoverTest, TestChainedCommands) {
 	ASSERT_EQ(position, rover.GetPos());
 }
 
-TEST(PlutoRoverTest, TestWrapping) {
-
-	PlutoRover rover(10, 10);
+TEST_F(PlutoRoverTest, TestWrapping) {
 
 	PlutoRover::Position position(0, 9, 'N');
-
 
 	std::string commands("B");
 	rover.Go(commands);
@@ -76,12 +70,9 @@ TEST(PlutoRoverTest, TestWrapping) {
 	ASSERT_EQ(position, rover.GetPos());
 }
 
-TEST(PlutoRoverTest, TestComplexWrapping) {
-
-	PlutoRover rover(10, 10);
+TEST_F(PlutoRoverTest, TestComplexWrapping) {
 
 	PlutoRover::Position position(0, 0, 'N');
-
 
 	std::string commands("BRBRBRBR");
 	rover.Go(commands);
@@ -89,14 +80,16 @@ TEST(PlutoRoverTest, TestComplexWrapping) {
 	ASSERT_EQ(position, rover.GetPos());
 }
 
-// verifies that the code doesn't overflow for large grids
-TEST(PlutoRoverTest, TestGridOverflow) {
+TEST_F(PlutoRoverTest, TestObstacles) {
 
-	PlutoRover rover(ULONG_MAX, ULONG_MAX);
+	// Create a 3X3 grid with an obstacle in its centre
+	std::vector<std::vector<uint8_t>> grid{ {0, 0, 0}, {0, 1, 0}, {0, 0, 0} };
 
-	PlutoRover::Position position(0, 0, 'N');
+	PlutoRover rover(grid);
 
-	std::string commands("BRBRBRBR");
+	PlutoRover::Position position(0, 1, 'E');
+
+	std::string commands("FRFF");
 	rover.Go(commands);
 
 	ASSERT_EQ(position, rover.GetPos());
