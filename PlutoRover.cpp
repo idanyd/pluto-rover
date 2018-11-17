@@ -22,46 +22,73 @@ void PlutoRover::Go(const std::string& commands)
 	}
 }
 
+// Move one square forward, taking wrapping into consideration
 void PlutoRover::GoForward()
 {
 	switch (m_position.m_heading) {
 	case 'N':
-		++m_position.m_y;
+		if (m_position.m_y == m_grid_y - 1)
+			m_position.m_y = 0;
+		else
+			++m_position.m_y;
 		break;
 	case 'E':
-		++m_position.m_x;
+		if (m_position.m_x == m_grid_x - 1)
+			m_position.m_x = 0;
+		else
+			++m_position.m_x;
 		break;
 	case 'S':
-		--m_position.m_y;
+		if (m_position.m_y == 0)
+			m_position.m_y = m_grid_y - 1;
+		else
+			--m_position.m_y;
 		break;
 	case 'W':
-		--m_position.m_x;
+		if (m_position.m_x == 0)
+			m_position.m_x = m_grid_x - 1;
+		else
+			--m_position.m_x;
 		break;
 	default:
 		break;
 	}
 }
 
+// Move one square back, taking wrapping into consideration
 void PlutoRover::GoBack()
 {
 	switch (m_position.m_heading) {
 	case 'N':
-		--m_position.m_y;
+		if (m_position.m_y == 0)
+			m_position.m_y = m_grid_y - 1;
+		else
+			--m_position.m_y;
 		break;
 	case 'E':
-		--m_position.m_x;
+		if (m_position.m_x == 0)
+			m_position.m_x = m_grid_x - 1;
+		else
+			--m_position.m_x;
 		break;
 	case 'S':
-		++m_position.m_y;
+		if (m_position.m_y == m_grid_y - 1)
+			m_position.m_y = 0;
+		else
+			++m_position.m_y;
 		break;
 	case 'W':
-		++m_position.m_x;
+		if (m_position.m_x == m_grid_x - 1)
+			m_position.m_x = 0;
+		else
+			++m_position.m_x;
 		break;
 	default:
 		break;
 	}
 }
 
+// Make a 90 degrees right turn
 void PlutoRover::TurnRight()
 {
 	switch (m_position.m_heading) {
@@ -82,6 +109,7 @@ void PlutoRover::TurnRight()
 	}
 }
 
+// Make a 90 degrees left turn
 void PlutoRover::TurnLeft()
 {
 	switch (m_position.m_heading) {

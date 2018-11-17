@@ -2,9 +2,11 @@
 
 #include "..\PlutoRover\PlutoRover.h"
 
+#include <vector>
+
 TEST(PlutoRoverTest, TestStartPosition) {
 
-	PlutoRover rover;
+	PlutoRover rover(10, 10);
 
 	PlutoRover::Position position(0, 0, 'N');
 
@@ -13,7 +15,7 @@ TEST(PlutoRoverTest, TestStartPosition) {
 
 TEST(PlutoRoverTest, TestForwardCommand) {
 
-	PlutoRover rover;
+	PlutoRover rover(10, 10);
 
 	PlutoRover::Position position(0, 1, 'N');
 
@@ -25,7 +27,7 @@ TEST(PlutoRoverTest, TestForwardCommand) {
 
 TEST(PlutoRoverTest, TestSimpleCommand) {
 
-	PlutoRover rover;
+	PlutoRover rover(10, 10);
 
 	PlutoRover::Position position(2, 2, 'E');
 
@@ -37,7 +39,7 @@ TEST(PlutoRoverTest, TestSimpleCommand) {
 
 TEST(PlutoRoverTest, TestSimpleCommandWithUnhandledcharacters) {
 
-	PlutoRover rover;
+	PlutoRover rover(10, 10);
 
 	PlutoRover::Position position(2, 2, 'E');
 
@@ -49,7 +51,7 @@ TEST(PlutoRoverTest, TestSimpleCommandWithUnhandledcharacters) {
 
 TEST(PlutoRoverTest, TestChainedCommands) {
 
-	PlutoRover rover;
+	PlutoRover rover(10, 10);
 
 	PlutoRover::Position position(1, 5, 'N');
 
@@ -57,6 +59,19 @@ TEST(PlutoRoverTest, TestChainedCommands) {
 	std::string commands2("LLFRFFF");
 	rover.Go(commands1);
 	rover.Go(commands2);
+
+	ASSERT_EQ(position, rover.GetPos());
+}
+
+TEST(PlutoRoverTest, TestWrapping) {
+
+	PlutoRover rover(10, 10);
+
+	PlutoRover::Position position(0, 9, 'N');
+
+
+	std::string commands("B");
+	rover.Go(commands);
 
 	ASSERT_EQ(position, rover.GetPos());
 }
