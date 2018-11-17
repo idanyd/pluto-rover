@@ -75,3 +75,29 @@ TEST(PlutoRoverTest, TestWrapping) {
 
 	ASSERT_EQ(position, rover.GetPos());
 }
+
+TEST(PlutoRoverTest, TestComplexWrapping) {
+
+	PlutoRover rover(10, 10);
+
+	PlutoRover::Position position(0, 0, 'N');
+
+
+	std::string commands("BRBRBRBR");
+	rover.Go(commands);
+
+	ASSERT_EQ(position, rover.GetPos());
+}
+
+// verifies that the code doesn't overflow for large grids
+TEST(PlutoRoverTest, TestGridOverflow) {
+
+	PlutoRover rover(ULONG_MAX, ULONG_MAX);
+
+	PlutoRover::Position position(0, 0, 'N');
+
+	std::string commands("BRBRBRBR");
+	rover.Go(commands);
+
+	ASSERT_EQ(position, rover.GetPos());
+}
