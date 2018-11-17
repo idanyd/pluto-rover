@@ -38,8 +38,9 @@ public:
 	// 'L' - Turn 90 degrees left
 	// 'L' - Turn 90 degrees right
 	// Any other character will be ignored by the rover
-	// The rover stops as soon as it hits an obstacle
-	void Go(const std::string& commands);
+	// The rover stops as soon as it hits an obstacle.
+	// If the rover hit an obstacle it returns false, otherwise it return true
+	bool Go(const std::string& commands);
 
 private:
 	bool GoForward();
@@ -51,5 +52,3 @@ private:
 	Position m_position;
 	std::vector<std::vector<uint8_t>> m_grid;
 };
-
-
