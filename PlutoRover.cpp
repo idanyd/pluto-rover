@@ -3,12 +3,13 @@
 void PlutoRover::Go(const std::string& commands)
 {
 	for (auto command : commands) {
+		bool success = true;
 		switch (command) {
 		case 'F':
-			GoForward();
+			success = GoForward();
 			break;
 		case 'B':
-			GoBack();
+			success = GoBack();
 			break;
 		case 'L':
 			TurnLeft();
@@ -19,73 +20,98 @@ void PlutoRover::Go(const std::string& commands)
 		default:
 			break;
 		}
+
+		if (!success)
+			break;
 	}
 }
 
-// Move one square forward, taking wrapping into consideration
-void PlutoRover::GoForward()
+// Move one square forward, taking wrapping and obstacles into consideration
+bool PlutoRover::GoForward()
 {
-	switch (m_position.m_heading) {
+	bool success = false;
+
+	Position new_position(m_position);
+
+	switch (new_position.m_heading) {
 	case 'N':
-		if (m_position.m_y == m_grid_y - 1)
-			m_position.m_y = 0;
+		if (new_position.m_y == m_grid[new_position.m_x].size() - 1)
+			new_position.m_y = 0;
 		else
-			++m_position.m_y;
+			++new_position.m_y;
 		break;
 	case 'E':
-		if (m_position.m_x == m_grid_x - 1)
-			m_position.m_x = 0;
+		if (new_position.m_x == m_grid.size() - 1)
+			new_position.m_x = 0;
 		else
-			++m_position.m_x;
+			++new_position.m_x;
 		break;
 	case 'S':
-		if (m_position.m_y == 0)
-			m_position.m_y = m_grid_y - 1;
+		if (new_position.m_y == 0)
+			new_position.m_y = m_grid[new_position.m_x].size() - 1;
 		else
-			--m_position.m_y;
+			--new_position.m_y;
 		break;
 	case 'W':
-		if (m_position.m_x == 0)
-			m_position.m_x = m_grid_x - 1;
+		if (new_position.m_x == 0)
+			new_position.m_x = m_grid.size() - 1;
 		else
-			--m_position.m_x;
+			--new_position.m_x;
 		break;
 	default:
 		break;
 	}
+
+	if (m_grid[new_position.m_x][new_position.m_y] == 0) {
+		m_position = new_position;
+		success = true;
+	}
+	
+	return success;	
 }
 
-// Move one square back, taking wrapping into consideration
-void PlutoRover::GoBack()
+// Move one square back, taking wrapping and obstacles into consideration
+bool PlutoRover::GoBack()
 {
-	switch (m_position.m_heading) {
+	bool success = false;
+
+	Position new_position(m_position);
+
+	switch (new_position.m_heading) {
 	case 'N':
-		if (m_position.m_y == 0)
-			m_position.m_y = m_grid_y - 1;
+		if (new_position.m_y == 0)
+			new_position.m_y = m_grid[new_position.m_x].size() - 1;
 		else
-			--m_position.m_y;
+			--new_position.m_y;
 		break;
 	case 'E':
-		if (m_position.m_x == 0)
-			m_position.m_x = m_grid_x - 1;
+		if (new_position.m_x == 0)
+			new_position.m_x = m_grid.size() - 1;
 		else
-			--m_position.m_x;
+			--new_position.m_x;
 		break;
 	case 'S':
-		if (m_position.m_y == m_grid_y - 1)
-			m_position.m_y = 0;
+		if (new_position.m_y == m_grid[new_position.m_x].size() - 1)
+			new_position.m_y = 0;
 		else
-			++m_position.m_y;
+			++new_position.m_y;
 		break;
 	case 'W':
-		if (m_position.m_x == m_grid_x - 1)
-			m_position.m_x = 0;
+		if (new_position.m_x == m_grid.size() - 1)
+			new_position.m_x = 0;
 		else
-			++m_position.m_x;
+			++new_position.m_x;
 		break;
 	default:
 		break;
 	}
+
+	if (m_grid[new_position.m_x][new_position.m_y] == 0) {
+		m_position = new_position;
+		success = true;
+	}
+
+	return success;
 }
 
 // Make a 90 degrees right turn
