@@ -1,9 +1,9 @@
 #include "PlutoRover.h"
 
-void PlutoRover::Go(const std::string& commands)
+bool PlutoRover::Go(const std::string& commands)
 {
+	bool success = true;
 	for (auto command : commands) {
-		bool success = true;
 		switch (command) {
 		case 'F':
 			success = GoForward();
@@ -24,6 +24,8 @@ void PlutoRover::Go(const std::string& commands)
 		if (!success)
 			break;
 	}
+
+	return success;
 }
 
 // Move one square forward, taking wrapping and obstacles into consideration
@@ -63,6 +65,7 @@ bool PlutoRover::GoForward()
 	}
 
 	if (m_grid[new_position.m_x][new_position.m_y] == 0) {
+		// There's no obstacles in the new position. Move there
 		m_position = new_position;
 		success = true;
 	}
@@ -107,6 +110,7 @@ bool PlutoRover::GoBack()
 	}
 
 	if (m_grid[new_position.m_x][new_position.m_y] == 0) {
+		// There's no obstacles in the new position. Move there
 		m_position = new_position;
 		success = true;
 	}
